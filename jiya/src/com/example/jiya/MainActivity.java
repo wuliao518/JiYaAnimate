@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AbsListView;
@@ -14,6 +16,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 /**
@@ -25,8 +29,10 @@ public class MainActivity extends Activity implements OnScrollListener{
 	private TextView mTextView;
 	private ListView mListView;
 	private LayoutInflater inflate;
+	private ImageView mImageView;
 	private LinearLayout mLinearLayout;
 	private ArrayList<String> mStrs;
+	private PopupWindow mPopupWindow;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,9 +43,24 @@ public class MainActivity extends Activity implements OnScrollListener{
 		inflate=LayoutInflater.from(this);
 		mStrs=new ArrayList<String>();
 		addData();
+		mImageView=(ImageView) findViewById(R.id.iv_flow);
 		mListView=(ListView) findViewById(R.id.listview);
 		mLinearLayout=(LinearLayout) findViewById(R.id.title);
 		mTextView=(TextView) findViewById(R.id.tv_title);
+		mImageView.setOnClickListener(new OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				int[] arr=new int[2];
+				v.getLocationInWindow(arr);
+				TextView tv=new TextView(getApplicationContext());
+				tv.setBackgroundColor(0xdd000000);
+				tv.setText("µ¯³ö");
+				mPopupWindow=new PopupWindow(tv, v.getWidth(), LayoutParams.WRAP_CONTENT,true);
+				mPopupWindow.setFocusable(false);
+				mPopupWindow.setOutsideTouchable(true);
+				mPopupWindow.showAtLocation(v, Gravity.TOP|Gravity.LEFT, arr[0], arr[1]-60);
+			}
+		});
 		mListView.setAdapter(new MyAdapter());
 		mListView.setOnScrollListener(this);
 	}
